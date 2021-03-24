@@ -11,10 +11,10 @@ test
 # Gameplay
 
 <p float="center">
-  <img src="https://github.com/arasgungore/console-games/blob/main/gif/pong.gif" width="800" />
-  <img src="https://github.com/arasgungore/console-games/blob/main/gif/snake.gif" width="800" />
-  <img src="https://github.com/arasgungore/console-games/blob/main/gif/space_invaders.gif" width="800" />
-  <img src="https://github.com/arasgungore/console-games/blob/main/gif/tetris.gif" width="800" />
+  <img src="https://github.com/arasgungore/console-games/blob/main/gif/pong_gameplay.gif" width="800" />
+  <img src="https://github.com/arasgungore/console-games/blob/main/gif/snake_gameplay.gif" width="800" />
+  <img src="https://github.com/arasgungore/console-games/blob/main/gif/space_invaders_gameplay.gif" width="800" />
+  <img src="https://github.com/arasgungore/console-games/blob/main/gif/tetris_gameplay.gif" width="800" />
 </p>
 
 ## Author
