@@ -3,44 +3,48 @@
 
 #include "common.h"
 
+// shape (tetromino) struct definition
 typedef struct {
-	char **shape_matrix;
-	unsigned short width;
-	short x, y;
+	char **shape_matrix;		// stores the shape of the tetromino in a char matrix
+	unsigned short width;		// width of the tetromino
+	short x, y;					// x and y coordinates of the location of tetromino
 } Shape;
 
 #define TETRIS_BOARD_WIDTH 11
 #define TETRIS_BOARD_HEIGHT 20
 
+// Tetris struct definition
 typedef struct {
-	char board[TETRIS_BOARD_HEIGHT][TETRIS_BOARD_WIDTH];
-	unsigned int score, timer;
+	char board[TETRIS_BOARD_HEIGHT][TETRIS_BOARD_WIDTH];	// game board
+	unsigned int score, timer;								// score and timer
 } Tetris;
 
 #define ROTATE_KEY UP_KEY
-#define DEFAULT_TIMER 500000		//500000 microseconds = half a second
+#define DEFAULT_TIMER 500000		// 500000 microseconds = half a second
+
+// 7 tetrominos that are going to be used throughout the game
 const Shape Tetrominos[7] = {
 	{(char *[]){(char []){0,0,0,0},
 				(char []){1,1,1,1},
 				(char []){0,0,0,0},
-				(char []){0,0,0,0}}, 4, 0, 0},		//I tetromino
+				(char []){0,0,0,0}}, 4, 0, 0},		// I tetromino
 	{(char *[]){(char []){1,1},
-				(char []){1,1}}, 2, 0, 0},			//O tetromino
+				(char []){1,1}}, 2, 0, 0},			// O tetromino
 	{(char *[]){(char []){0,1,0},
 				(char []){1,1,1},
-				(char []){0,0,0}}, 3, 0, 0},		//T tetromino
+				(char []){0,0,0}}, 3, 0, 0},		// T tetromino
 	{(char *[]){(char []){0,1,1},
 				(char []){1,1,0},
-				(char []){0,0,0}}, 3, 0, 0},		//S tetromino
+				(char []){0,0,0}}, 3, 0, 0},		// S tetromino
 	{(char *[]){(char []){1,1,0},
 				(char []){0,1,1},
-				(char []){0,0,0}}, 3, 0, 0},		//Z tetromino
+				(char []){0,0,0}}, 3, 0, 0},		// Z tetromino
 	{(char *[]){(char []){0,0,1},
 				(char []){1,1,1},
-				(char []){0,0,0}}, 3, 0, 0},		//J tetromino
+				(char []){0,0,0}}, 3, 0, 0},		// J tetromino
 	{(char *[]){(char []){1,0,0},
 				(char []){1,1,1},
-				(char []){0,0,0}}, 3, 0, 0}			//L tetromino
+				(char []){0,0,0}}, 3, 0, 0}			// L tetromino
 };
 
 Shape *current;
@@ -87,17 +91,17 @@ void UpdateFrame4() {
 	gettimeofday(&before, NULL);
 	do {
 		if(kbhit()) {
-			char key = getch();					//FPS: 10^6 us / tetris.timer us = 1 s / 0.5 s = 2
-			ControlCurrentShape(key);			//the FPS will gradually increase because every time a row is filled, tetris.timer will decrease by a millisecond
+			char key = getch();					// FPS: 10^6 us / tetris.timer us = 1 s / 0.5 s = 2
+			ControlCurrentShape(key);			// the FPS will gradually increase because every time a row is filled, tetris.timer will decrease by a millisecond
 		}
 		gettimeofday(&after, NULL);
 		if((unsigned int)(after.tv_sec*1000000 + after.tv_usec - before.tv_sec*1000000 - before.tv_usec) > tetris.timer) {
 			before = after;
-			ControlCurrentShape(DOWN_KEY);		//in every once in "timer", the tetromino will fall by a unit on the board downwards
-		}										//as the game progresses, pieces will start to fall faster and faster
+			ControlCurrentShape(DOWN_KEY);		// in every once in "timer", the tetromino will fall by a unit on the board downwards
+		}										// as the game progresses, pieces will start to fall faster and faster
 	} while(game_on_flag_4);
 	system("cls");
-	printf( "Game over!"		//game over
+	printf( "Game over!"		// game over
 			"\nBetter luck next time."
 			"\n(Press C to continue...)");
 	char key;
@@ -118,45 +122,45 @@ void PrintBoard4() {
 	for(i=0;i<2*TETRIS_BOARD_WIDTH+2;i++)
 		printf("*");
 	for(i=0;i<TETRIS_BOARD_HEIGHT;i++) {
-		MoveCursorToXY(30, 4+i);
+		MoveCursorToXY(30, 4 + i);
 		printf("*");
-		MoveCursorToXY(31+2*TETRIS_BOARD_WIDTH, 4+i);
+		MoveCursorToXY(31 + 2*TETRIS_BOARD_WIDTH, 4 + i);
 		printf("*");
 	}
-	MoveCursorToXY(30, 4+TETRIS_BOARD_HEIGHT);
+	MoveCursorToXY(30, 4 + TETRIS_BOARD_HEIGHT);
 	for(i=0;i<2*TETRIS_BOARD_WIDTH+2;i++)	
 		printf("*");
 }
 
 // prints the shapes onto the terminal
 void PrintShapeToConsole() {
-	unsigned short i,j;
+	unsigned short i, j;
 	for(i=0;i<TETRIS_BOARD_HEIGHT;i++)
 		for(j=0;j<TETRIS_BOARD_WIDTH;j++)
 			if(tetris.board[i][j]) {
-				MoveCursorToXY(31+2*j, 4+i);
+				MoveCursorToXY(31 + 2*j, 4 + i);
 				printf("O");
 			}
 }
 
 // erases the shape seen on the terminal
 void EraseShapeFromConsole() {
-	unsigned short i,j;
+	unsigned short i, j;
 	for(i=0;i<current->width;i++)
 		for(j=0;j<current->width;j++)
 			if(current->shape_matrix[i][j]) {
-				MoveCursorToXY(31+2*(j+current->x), 4+i+current->y);
+				MoveCursorToXY(31 + 2*(j + current->x), 4 + i + current->y);
 				printf(" ");
 			}
 }
 
 // stores the shape in the board with ones
 void WriteShapeToBoard() {
-	unsigned short i,j;
+	unsigned short i, j;
 	for(i=0;i<current->width;i++)
 		for(j=0;j<current->width;j++)
 			if(current->shape_matrix[i][j])
-				tetris.board[current->y+i][current->x+j] = 1;
+				tetris.board[current->y + i][current->x + j] = 1;
 }
 
 // deletes the stored shape with zeros
@@ -165,7 +169,7 @@ void DeleteShapeFromBoard() {
 	for(i=0;i<current->width;i++)
 		for(j=0;j<current->width;j++)
 			if(current->shape_matrix[i][j])
-				tetris.board[current->y+i][current->x+j] = 0;
+				tetris.board[current->y + i][current->x + j] = 0;
 }
 
 // selects a random tetromino
@@ -183,7 +187,7 @@ Shape* CopyShape(const Shape shape) {
 	copy->y = shape.y;
 	copy->x = shape.x;
 	copy->shape_matrix = (char**) malloc(copy->width * sizeof(char*));
-	unsigned short i,j;
+	unsigned short i, j;
 	for(i=0;i<copy->width;i++) {
 		copy->shape_matrix[i] = (char*) malloc(copy->width * sizeof(char));
 		for(j=0;j<copy->width;j++)
@@ -207,9 +211,9 @@ unsigned short CheckPosition(Shape *shape) {
 	for(i=0;i<shape->width;i++)
 		for(j=0;j<shape->width;j++)
 			if(shape->shape_matrix[i][j]) {
-				if(shape->x+j<0 || shape->x+j>=TETRIS_BOARD_WIDTH || shape->y+i>=TETRIS_BOARD_HEIGHT)	//if out of board boundaries
+				if(shape->x + j < 0 || shape->x + j >= TETRIS_BOARD_WIDTH || shape->y + i >= TETRIS_BOARD_HEIGHT)	// if out of board boundaries
 					return FALSE;
-				else if(tetris.board[shape->y+i][shape->x+j])	//if another piece occupies the given position
+				else if(tetris.board[shape->y + i][shape->x + j])		// if another piece occupies the given position
 					return FALSE;
 			}
 	return TRUE;
@@ -226,29 +230,29 @@ void CheckRows() {
 		if(sum == TETRIS_BOARD_WIDTH) {
 			counter++;
 			for(j=0;j<TETRIS_BOARD_WIDTH;j++) {
-				MoveCursorToXY(31+2*j,4+i);
+				MoveCursorToXY(31 + 2*j, 4 + i);
 				printf(" ");
 			}
 			unsigned short k;
 			for(k=i;k>=1;k--)
 				for(j=0;j<TETRIS_BOARD_WIDTH;j++) {
 					if(!tetris.board[k-1][j] && tetris.board[k][j]) {
-						MoveCursorToXY(31+2*j, 4+k);
+						MoveCursorToXY(31 + 2*j, 4 + k);
 						printf(" ");
 					}
-					tetris.board[k][j]=tetris.board[k-1][j];
+					tetris.board[k][j] = tetris.board[k-1][j];
 				}
 			for(j=0;j<TETRIS_BOARD_WIDTH;j++) {
 				tetris.board[k][j] = 0;
-				MoveCursorToXY(31+2*j, 4+k);
+				MoveCursorToXY(31 + 2*j, 4 + k);
 				printf(" ");
 			}
 		}
 	}
 	tetris.timer -= 1000;
 	tetris.score += 100*counter;
-	MoveCursorToXY(37,2);
-	printf("%u",tetris.score);
+	MoveCursorToXY(37, 2);
+	printf("%u", tetris.score);
 }
 
 // rotates the given tetromino clockwise
@@ -257,7 +261,7 @@ void RotateShape(Shape *shape) {
 	unsigned short i, j;
 	for(i=0;i<shape->width;i++)
 		for(j=0;j<shape->width;j++)
-			shape->shape_matrix[i][j] = temp->shape_matrix[shape->width-j-1][i];
+			shape->shape_matrix[i][j] = temp->shape_matrix[shape->width - j - 1][i];
 	DeleteShape(temp);
 }
 
@@ -265,46 +269,46 @@ void RotateShape(Shape *shape) {
 void ControlCurrentShape(char key) {
 	Shape *temp = CopyShape(*current);
 	switch(key) {
-		case LEFT_KEY:				//if hit left arrow key, move the piece to the left
+		case LEFT_KEY:				// if hit left arrow key, move the piece to the left
 			EraseShapeFromConsole();
 			temp->x--;
 			if(CheckPosition(temp))
 				current->x--;
 			break;
-		case RIGHT_KEY:				//if hit right arrow key, move the piece to the right
+		case RIGHT_KEY:				// if hit right arrow key, move the piece to the right
 			EraseShapeFromConsole();
 			temp->x++;
 			if(CheckPosition(temp))
 				current->x++;
 			break;
-		case DOWN_KEY:				//if hit down arrow key, move the piece downwards
+		case DOWN_KEY:				// if hit down arrow key, move the piece downwards
 			EraseShapeFromConsole();
 			temp->y++;
 			if(CheckPosition(temp))
 				current->y++;
 			else {
 				WriteShapeToBoard();
-				CheckRows();		//after placing the shape, check if the any rows are filled
+				CheckRows();		// after placing the shape, check if the any rows are filled
 				GetNewShape();
 			}
 			break;
-		case ROTATE_KEY:			//if hit up arrow key, rotate the shape
+		case ROTATE_KEY:			// if hit up arrow key, rotate the shape
 			EraseShapeFromConsole();
 			RotateShape(temp);
 			if(CheckPosition(temp))
 				RotateShape(current);
 			break;
-		case PAUSE_KEY:				//pause the game
+		case PAUSE_KEY:				// pause the game
 			do {
 				key = getch();
 				if(key == ESCAPE_KEY) {
-					MoveCursorToXY(0, 4+TETRIS_BOARD_HEIGHT);
+					MoveCursorToXY(0, 4 + TETRIS_BOARD_HEIGHT);
 					exit(0);
 				}
 			} while(key != PAUSE_KEY);
 			break;
-		case ESCAPE_KEY:			//exit the game
-			MoveCursorToXY(0, 4+TETRIS_BOARD_HEIGHT);
+		case ESCAPE_KEY:			// exit the game
+			MoveCursorToXY(0, 4 + TETRIS_BOARD_HEIGHT);
 			exit(0);
 	}
 	DeleteShape(temp);
@@ -338,7 +342,7 @@ unsigned short RecordScore4() {
 			info = fopen("./Records/tetris_record.txt","r");
 			char ch;
 			while((ch = fgetc(info)) != EOF)
-				printf("%c",ch);
+				printf("%c", ch);
 			fclose(info);
 			break;
 		case 'R':

@@ -3,25 +3,27 @@
 
 #include "common.h"
 
+// point struct definition
 typedef struct {
-	unsigned short x, y;
-	char direction;
-} Coordinate;
+	unsigned short x, y;	// x and y coordinates of the point
+	char direction;			// the direction where the point is headed (relevant if the point is on the snake)
+} Point;
 
+// Snake struct definition
 typedef struct {
-	unsigned short bend_no, body_no, length, lives;
-	unsigned int score;
+	unsigned short bend_no, body_no, length, lives;		// length and lives of the snake
+	unsigned int score;		// score
 } Snake;
 
 #define SNAKE_DEFAULT_LIVES 3
-#define DEFAULT_BODY_LENGTH 5		//the initial length of the snake is 5, and it can reach a maximum length of 29
+#define DEFAULT_BODY_LENGTH 5		// the initial length of the snake is 5, and it can reach a maximum length of 29
 #define MAX_BODY_LENGTH 29
 #define SNAKE_BOARD_WIDTH 60
 #define SNAKE_BOARD_HEIGHT 20
-const Coordinate SPAWN_POINT = (Coordinate){25, 15, RIGHT_KEY};
+const Point SPAWN_POINT = (Point){25, 15, RIGHT_KEY};
 
-Coordinate head, bend[500], food, body[MAX_BODY_LENGTH+1];
-Snake snake = (Snake){0, 0, DEFAULT_BODY_LENGTH+1, SNAKE_DEFAULT_LIVES, 0};
+Point head, bend[500], food, body[MAX_BODY_LENGTH+1];
+Snake snake = (Snake){0, 0, DEFAULT_BODY_LENGTH + 1, SNAKE_DEFAULT_LIVES, 0};
 unsigned short game_on_flag_2 = TRUE;
 
 void OpeningScreen2();
@@ -56,7 +58,7 @@ void UpdateFrame2() {
 	do {
 		GenerateFood();
 		snake.body_no = 0;
-		Sleep(35);				//FPS: 1000 ms / 35 ms = 28.571428
+		Sleep(35);				// FPS: 1000 ms / 35 ms = 28.571428
 		SnakeMove();
 		LoseaLife();
 		if(kbhit()) {
@@ -106,23 +108,23 @@ void UpdateFrame2() {
 							}
 					}
 					break;
-				case PAUSE_KEY:		//pause the game
+				case PAUSE_KEY:		// pause the game
 					do {
 						key = getch();
 						if(key == ESCAPE_KEY) {
-							MoveCursorToXY(0, 5+SNAKE_BOARD_HEIGHT);
+							MoveCursorToXY(0, 5 + SNAKE_BOARD_HEIGHT);
 							exit(0);
 						}
 					} while(key != PAUSE_KEY);
 					break;
-				case ESCAPE_KEY:	//exit the game
-					MoveCursorToXY(0, 5+SNAKE_BOARD_HEIGHT);
+				case ESCAPE_KEY:	// exit the game
+					MoveCursorToXY(0, 5 + SNAKE_BOARD_HEIGHT);
 					exit(0);
 			}
 		}
 	} while(game_on_flag_2);
 	system("cls");
-	printf( "Game over!"			//game over
+	printf( "Game over!"			// game over
 			"\nBetter luck next time."
 			"\n(Press C to continue...)");
 	char key;
@@ -144,13 +146,13 @@ void PrintBoard2() {
 	for(i=10;i<11+SNAKE_BOARD_WIDTH;i++) {
 		MoveCursorToXY(i, 5);
 		printf("_");
-		MoveCursorToXY(i, 5+SNAKE_BOARD_HEIGHT);
+		MoveCursorToXY(i, 5 + SNAKE_BOARD_HEIGHT);
 		printf("_");
 	}
 	for(i=6;i<6+SNAKE_BOARD_HEIGHT;i++) {
 		MoveCursorToXY(10, i);
 		printf("|");
-		MoveCursorToXY(10+SNAKE_BOARD_WIDTH, i);
+		MoveCursorToXY(10 + SNAKE_BOARD_WIDTH, i);
 		printf("|");
 	}
 }
@@ -158,35 +160,35 @@ void PrintBoard2() {
 // generates food on the board for the snake to eat
 void GenerateFood() {
 	unsigned short snake_intersect_flag = TRUE;
-	if(head.x==food.x && head.y==food.y) {
-		if(snake.length<=MAX_BODY_LENGTH)
+	if(head.x == food.x && head.y == food.y) {
+		if(snake.length <= MAX_BODY_LENGTH)
 			snake.length++;
 		MoveCursorToXY(27, 4);
 		printf("%u", ++snake.score);
-		MoveCursorToXY(food.x, food.y);			//erase the eaten food from board
+		MoveCursorToXY(food.x, food.y);				// erase the eaten food from board
 		printf(" ");
 		while(snake_intersect_flag) {
-			food.x = rand()%(SNAKE_BOARD_WIDTH-1) + 11;
-			food.y = rand()%(SNAKE_BOARD_HEIGHT-1) + 6;
+			food.x = rand()%(SNAKE_BOARD_WIDTH - 1) + 11;
+			food.y = rand()%(SNAKE_BOARD_HEIGHT - 1) + 6;
 			unsigned short i;
 			for(i=0;i<snake.length;i++)
-				if(food.x==body[i].x && food.y==body[i].y)
+				if(food.x == body[i].x && food.y == body[i].y)
 					break;
-				else if(i==snake.length-1)
+				else if(i == snake.length - 1)
 					snake_intersect_flag = FALSE;
 		}
-		MoveCursorToXY(food.x, food.y);			//shows the food on board with "F"
+		MoveCursorToXY(food.x, food.y);				// shows the food on board with "F"
 		printf("F");
 	}
-	else if(food.x==0 && food.y==0) {			//generates food for the first time
+	else if(food.x == 0 && food.y == 0) {			// generates food for the first time
 		while(snake_intersect_flag) {
-			food.x = rand()%(SNAKE_BOARD_WIDTH-1) + 11;
-			food.y = rand()%(SNAKE_BOARD_HEIGHT-1) + 6;
+			food.x = rand()%(SNAKE_BOARD_WIDTH - 1) + 11;
+			food.y = rand()%(SNAKE_BOARD_HEIGHT - 1) + 6;
 			unsigned short i;
 			for(i=0;i<snake.length;i++)
-				if(food.x==body[i].x && food.y==body[i].y)
+				if(food.x == body[i].x && food.y == body[i].y)
 					break;
-				else if(i==snake.length-1)
+				else if(i == snake.length - 1)
 					snake_intersect_flag = FALSE;
 		}
 		MoveCursorToXY(food.x, food.y);
@@ -199,44 +201,44 @@ void SnakeMove() {
 	unsigned short i;
 	switch(head.direction) {
 		case LEFT_KEY:
-			for(i=0; i<=bend[snake.bend_no].x-head.x && snake.body_no<snake.length; i++, snake.body_no++) {
-				body[snake.body_no].x = head.x+i;
+			for(i=0; i <= bend[snake.bend_no].x - head.x && snake.body_no < snake.length; i++, snake.body_no++) {
+				body[snake.body_no].x = head.x + i;
 				body[snake.body_no].y = head.y;
 				MoveCursorToXY(body[snake.body_no].x, body[snake.body_no].y);
-				printf(snake.body_no==0 ? "<" : "*");
+				printf(snake.body_no == 0 ? "<" : "*");
 			}
 			SnakeBend();
 			if(!kbhit())
 				head.x--;
 			break;
 		case RIGHT_KEY:
-			for(i=0; i<=head.x-bend[snake.bend_no].x && snake.body_no<snake.length; i++, snake.body_no++) {
-				body[snake.body_no].x = head.x-i;
+			for(i=0; i <= head.x - bend[snake.bend_no].x && snake.body_no < snake.length; i++, snake.body_no++) {
+				body[snake.body_no].x = head.x - i;
 				body[snake.body_no].y = head.y;
 				MoveCursorToXY(body[snake.body_no].x, body[snake.body_no].y);
-				printf(snake.body_no==0 ? ">" : "*");
+				printf(snake.body_no == 0 ? ">" : "*");
 			}
 			SnakeBend();
 			if(!kbhit())
 				head.x++;
 			break;
 		case UP_KEY:
-			for(i=0; i<=bend[snake.bend_no].y-head.y && snake.body_no<snake.length; i++, snake.body_no++) {
+			for(i=0; i <= bend[snake.bend_no].y - head.y && snake.body_no < snake.length; i++, snake.body_no++) {
 				body[snake.body_no].x = head.x;
-				body[snake.body_no].y = head.y+i;
+				body[snake.body_no].y = head.y + i;
 				MoveCursorToXY(body[snake.body_no].x, body[snake.body_no].y);
-				printf(snake.body_no==0 ? "^" : "*");
+				printf(snake.body_no == 0 ? "^" : "*");
 			}
 			SnakeBend();
 			if(!kbhit())
 				head.y--;
 			break;
 		case DOWN_KEY:
-			for(i=0; i<=head.y-bend[snake.bend_no].y && snake.body_no<snake.length; i++, snake.body_no++) {
+			for(i=0; i <= head.y - bend[snake.bend_no].y && snake.body_no < snake.length; i++, snake.body_no++) {
 				body[snake.body_no].x = head.x;
-				body[snake.body_no].y = head.y-i;
+				body[snake.body_no].y = head.y - i;
 				MoveCursorToXY(body[snake.body_no].x, body[snake.body_no].y);
-				printf(snake.body_no==0 ? "v" : "*");
+				printf(snake.body_no == 0 ? "v" : "*");
 			}
 			SnakeBend();
 			if(!kbhit())
@@ -248,23 +250,23 @@ void SnakeMove() {
 void SnakeBend() {
 	MoveCursorToXY(body[snake.length-1].x, body[snake.length-1].y);
 	printf(" ");
-	short i,j,diff;
-	for(i=snake.bend_no; i>=0 && snake.body_no<snake.length; i--)
-		if(bend[i].x==bend[i-1].x) {
-			diff = bend[i].y-bend[i-1].y;
-			for(j=1; j<=abs(diff) && snake.body_no<snake.length; j++, snake.body_no++) {
+	short i, j, diff;
+	for(i=snake.bend_no; i >= 0 && snake.body_no < snake.length; i--)
+		if(bend[i].x == bend[i-1].x) {
+			diff = bend[i].y - bend[i-1].y;
+			for(j=1; j <= abs(diff) && snake.body_no < snake.length; j++, snake.body_no++) {
 				body[snake.body_no].x = bend[i].x;
-				body[snake.body_no].y = diff<0 ? bend[i].y+j : bend[i].y-j;
+				body[snake.body_no].y = diff<0 ? bend[i].y + j : bend[i].y - j;
 				MoveCursorToXY(body[snake.body_no].x, body[snake.body_no].y);
 				printf("*");
 			}
 			MoveCursorToXY(body[snake.length-1].x, body[snake.length-1].y);
 			printf(" ");
 		}
-		else if(bend[i].y==bend[i-1].y) {
-			diff = bend[i].x-bend[i-1].x;
-			for(j=1; j<=abs(diff) && snake.body_no<snake.length; j++, snake.body_no++) {
-				body[snake.body_no].x = diff<0 ? bend[i].x+j : bend[i].x-j;
+		else if(bend[i].y == bend[i-1].y) {
+			diff = bend[i].x - bend[i-1].x;
+			for(j=1; j <= abs(diff) && snake.body_no < snake.length; j++, snake.body_no++) {
+				body[snake.body_no].x = diff<0 ? bend[i].x + j : bend[i].x - j;
 				body[snake.body_no].y = bend[i].y;
 				MoveCursorToXY(body[snake.body_no].x, body[snake.body_no].y);
 				printf("*");
@@ -277,19 +279,19 @@ void SnakeBend() {
 // erases a life from the snake when the snake hits its body or the board
 void LoseaLife() {
 	unsigned short i, touched_body_flag = FALSE;
-	for(i=4;i<snake.length;i++)				//starts from 4 because the snake has to be of at least length 4 to touch its body
-		if(body[0].x==body[i].x && body[0].y==body[i].y) {
-			touched_body_flag = TRUE;		//check if the head hits the body
+	for(i=4;i<snake.length;i++)				// starts from 4 because the snake has to be of at least length 4 to touch its body
+		if(body[0].x == body[i].x && body[0].y == body[i].y) {
+			touched_body_flag = TRUE;		// check if the head hits the body
 			break;
 		}
-	if(head.x<=10 || head.x>=10+SNAKE_BOARD_WIDTH || head.y<=5 || head.y>=5+SNAKE_BOARD_HEIGHT || touched_body_flag) {
+	if(head.x <= 10 || head.x >= 10 + SNAKE_BOARD_WIDTH || head.y <= 5 || head.y >= 5 + SNAKE_BOARD_HEIGHT || touched_body_flag) {
 		for(i=0;i<snake.length-1;i++) {
 			MoveCursorToXY(body[i].x, body[i].y);
 			printf("X");
 			Sleep(80);
 			printf("\b ");
 		}
-		MoveCursorToXY(57,4);
+		MoveCursorToXY(57, 4);
 		printf("%hu", --snake.lives);
 		if(!snake.lives)
 			game_on_flag_2 = FALSE;
@@ -331,7 +333,7 @@ unsigned short RecordScore2() {
 		case 'R':
 		case 'r':
 			game_on_flag_2 = TRUE;
-			snake = (Snake){0, 0, DEFAULT_BODY_LENGTH+1, SNAKE_DEFAULT_LIVES, 0};
+			snake = (Snake){0, 0, DEFAULT_BODY_LENGTH + 1, SNAKE_DEFAULT_LIVES, 0};
 			food.x = food.y = 0;
 			system("cls");
 			return TRUE;

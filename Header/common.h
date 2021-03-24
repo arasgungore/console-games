@@ -10,7 +10,7 @@
 #define TRUE 1
 #define FALSE 0
 
-#define LEFT_KEY 75		//ASCII codes corresponding to certain keys
+#define LEFT_KEY 75		// ASCII codes corresponding to certain keys
 #define RIGHT_KEY 77
 #define UP_KEY 72
 #define DOWN_KEY 80
@@ -20,7 +20,7 @@
 void MoveCursorToXY(unsigned short x, unsigned short y);
 void LoadingScreen();
 
-// moves the cursor to a different (x,y) location on the terminal
+// moves the cursor to a different (x, y) location on the terminal
 void MoveCursorToXY(unsigned short x, unsigned short y) {
 	COORD coord = (COORD){x, y};
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);

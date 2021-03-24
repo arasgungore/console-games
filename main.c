@@ -1,10 +1,10 @@
 #include "Header/pong.h"
 #include "Header/snake.h"
-#include "Header/spaceInvaders.h"
+#include "Header/space_invaders.h"
 #include "Header/tetris.h"
 
 typedef enum {
-	PONG='1', SNAKE, SPACE_INVADERS, TETRIS
+	PONG = '1', SNAKE, SPACE_INVADERS, TETRIS
 } ArcadeGames;
 
 int main() {
@@ -18,20 +18,21 @@ int main() {
 		char choose_game = getch();
 		switch(choose_game) {
 			case PONG:
-				PlayPong();
+				PlayPong();					// play Pong
 				break;
 			case SNAKE:
-				PlaySnake();
+				PlaySnake();				// play Snake
 				break;
 			case SPACE_INVADERS:
-				PlaySpaceInvaders();
+				PlaySpaceInvaders();		// play Space Invaders
 				break;
 			case TETRIS:
-				PlayTetris();
+				PlayTetris();				// play Tetris
 				break;
 			case ESCAPE_KEY:
-				exit(0);
+				return 0;					// exit game
 		}
 		system("cls");
 	}
+	return 0;
 }
