@@ -29,4 +29,4 @@ test
 👤 **Aras Güngöre**
 
 * LinkedIn: [@arasgungore](https://www.linkedin.com/in/arasgungore)
-* Github: [@arasgungore](https://github.com/arasgungore)
+* GitHub: [@arasgungore](https://github.com/arasgungore)
