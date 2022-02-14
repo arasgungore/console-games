@@ -1,6 +1,6 @@
 # console-games
 
-A C project where you can play your classic atari games from the 80's such as Pong, Snake, Space Invaders, and Tetris on the terminal.
+A C project in which you can play some of your classic Atari games from the '80s such as Pong, Snake, Space Invaders, and Tetris on the terminal.
 
 
 
