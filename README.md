@@ -4,7 +4,7 @@ A C project in which you can play some of your classic arcade video games from t
 
 
 
-# Run on terminal
+## Run on terminal
 
 ```sh
 gcc main.c -o test
@@ -13,7 +13,7 @@ test
 
 
 
-# Gameplay
+## Gameplay
 
 <p float="center">
     <img src="https://github.com/arasgungore/console-games/blob/main/Gameplay/pong_gameplay.gif" width="800">
@@ -24,7 +24,7 @@ test
 
 
 
-# Author
+## Author
 
 👤 **Aras Güngöre**
 
