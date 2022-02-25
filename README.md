@@ -4,7 +4,7 @@ A C project in which you can play some of your classic arcade video games from t
 
 
 
-## Run on terminal
+## Run on Terminal
 
 ```sh
 gcc main.c -o test
